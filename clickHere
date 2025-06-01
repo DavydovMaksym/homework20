@@ -1,0 +1,118 @@
+#include <iostream>
+
+class Fraction
+{
+    int numerator;
+    int denominator;
+
+    int gcd(int a, int b)
+    {
+        while (b != 0)
+        {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+    void reduce()
+    {
+        int divisor = gcd(abs(numerator), abs(denominator));
+        numerator /= divisor;
+        denominator /= divisor;
+
+        if (denominator < 0)
+        {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+    }
+
+public:
+    Fraction(int num = 0, int denom = 1)
+    {
+        if (denom == 0)
+        {
+            std::cout << "Error: Denominator cannot be zero." << std::endl;
+        }
+        numerator = num;
+        denominator = denom;
+        reduce();
+    }
+
+    void input()
+    {
+        std::cout << "Enter numerator: ";
+        std::cin >> numerator;
+        std::cout << "Enter denominator: ";
+        std::cin >> denominator;
+
+        if (denominator == 0)
+        {
+            std::cout << "Error: Denominator cannot be zero." << std::endl;
+        }
+
+        reduce();
+    }
+
+    void print()
+    {
+        std::cout << numerator << "/" << denominator << std::endl;
+    }
+
+    Fraction operator+(const Fraction& other) const
+    {
+        int num = numerator * other.denominator + other.numerator * denominator;
+        int denom = denominator * other.denominator;
+        return Fraction(num, denom);
+    }
+
+    Fraction operator-(const Fraction& other) const
+    {
+        int num = numerator * other.denominator - other.numerator * denominator;
+        int denom = denominator * other.denominator;
+        return Fraction(num, denom);
+    }
+
+    Fraction operator*(const Fraction& other) const
+    {
+        int num = numerator * other.numerator;
+        int denom = denominator * other.denominator;
+        return Fraction(num, denom);
+    }
+
+    Fraction operator/(const Fraction& other) const
+    {
+        if (other.numerator == 0)
+        {
+            std::cout << "Error: Division by zero fraction." << std::endl;
+            exit(1);
+        }
+        int num = numerator * other.denominator;
+        int denom = denominator * other.numerator;
+        return Fraction(num, denom);
+    }
+};
+
+int main()
+{
+    Fraction f1, f2;
+    std::cout << "Enter first fraction:\n";
+    f1.input();
+
+    std::cout << "Enter second fraction:\n";
+    f2.input();
+
+    Fraction sum = f1 + f2;
+    Fraction diff = f1 - f2;
+    Fraction prod = f1 * f2;
+    Fraction quot = f1 / f2;
+
+    std::cout << "\nResult(+): "; sum.print();
+    std::cout << "Result(-): "; diff.print();
+    std::cout << "Result(*): "; prod.print();
+    std::cout << "Result(/): "; quot.print();
+
+    return 0;
+}
